@@ -1,23 +1,22 @@
 ﻿using DateManagementMySQL.Core.DTOS;
 using DateManagementMySQL.Core.DTOS.Common;
-using DateManagementMySQL.Core.Interface.Respository;
+using DateManagementMySQL.Core.Interface.BLL;
+using DateManagementMySQL.Core.Interface.Repository;
 using DateManagementMySQL.Core.Interface.Service;
-using DateManagementMySQL.Core.Interfaces.BLL;
 using DateManagementMySQL.Infrastructure.Extensions;
 using System.Reflection;
 
 namespace DateManagementMySQL.Infrastructure.BLL
 {
-    public class RolesBLL(IRolesRepository roles, IlogService logService) : IRolesBLL
+    public class ImageAwsBLL(IAwsImagesRepository awsImagesRepository,IlogService logService) : IAwsImageBLL
     {
-        private readonly IRolesRepository _rolesRepository = roles ;
+        private readonly IAwsImagesRepository _awsImagesRepository = awsImagesRepository;
         private readonly IlogService _logService = logService;
-        public async Task<ResponseDTO> CreateRol(RolesDTO roles)
+        public async Task<ResponseDTO> DeleteImage(int fileId)
         {
-
             try
             {
-             return await _rolesRepository.CreateRol(roles);   
+                return await _awsImagesRepository.DeleteImage(fileId);
             }
             catch (Exception ex)
             {
@@ -25,11 +24,11 @@ namespace DateManagementMySQL.Infrastructure.BLL
             }
         }
 
-        public async Task<ResponseDTO> DeleteRol(int Idrol)
+        public async Task<ResponseDTO> GetListImages(PaginatorDTO paginatorDTO, int? fileId)
         {
             try
             {
-                return await _rolesRepository.DeleteRol(Idrol);
+                return await _awsImagesRepository.GetListImages(paginatorDTO, fileId);
             }
             catch (Exception ex)
             {
@@ -37,11 +36,12 @@ namespace DateManagementMySQL.Infrastructure.BLL
             }
         }
 
-        public async Task<ResponseDTO> GetListRoles(PaginatorDTO paginator, string? description)
+        public async Task<ResponseDTO> UpdateImage(AwsImagesDTO awsImagesDTO)
         {
+
             try
             {
-                return await _rolesRepository.GetListRoles(paginator, description);
+                return await _awsImagesRepository.UpdateImage(awsImagesDTO);
             }
             catch (Exception ex)
             {
@@ -49,12 +49,11 @@ namespace DateManagementMySQL.Infrastructure.BLL
             }
         }
 
-
-        public async Task<ResponseDTO> UpdateRol(RolesDTO roles)
+        public async Task<ResponseDTO> UploadImage(AwsImagesDTO awsImagesDTO)
         {
             try
             {
-                return await _rolesRepository.UpdateRol(roles);
+                return await _awsImagesRepository.UploadImage(awsImagesDTO);
             }
             catch (Exception ex)
             {

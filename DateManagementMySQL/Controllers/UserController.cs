@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DateManagementMySQL.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController(IUserBLL userBLL,IlogService ilogService) : ControllerBase
@@ -28,16 +27,12 @@ namespace DateManagementMySQL.Controllers
         => await HandleResponses.HandleResponse(() => _userBLL.UpdateUser(userDTO), _logService, MethodBase.GetCurrentMethod().Name);
 
         [HttpDelete("/DateManagement/DeleteUser")]
-        public async Task<IActionResult> DeleteUser(int userId)
-        => await HandleResponses.HandleResponse(() => _userBLL.DelUser(userId), _logService, MethodBase.GetCurrentMethod().Name);
+        public async Task<IActionResult> DeleteUser(int idUser)
+        => await HandleResponses.HandleResponse(() => _userBLL.DelUser(idUser), _logService, MethodBase.GetCurrentMethod().Name);
 
-        [HttpGet("/DateManagement/GetUsers")]
-        public async Task<IActionResult> GetUsers([FromQuery]PaginatorDTO paginator)
-        => await HandleResponses.HandleResponse(() => _userBLL.GetAllUsers(paginator), _logService, MethodBase.GetCurrentMethod().Name);
-
-        [HttpGet("/DateManagement/GetUserById")]
-        public async Task<IActionResult> GetUserById([FromQuery] int userId)
-       => await HandleResponses.HandleResponse(() => _userBLL.GetUserById(userId), _logService, MethodBase.GetCurrentMethod().Name);
+        [HttpGet("/DateManagement/GetListUsers")]
+        public async Task<IActionResult> GetListUsers([FromQuery]PaginatorDTO paginator,int? idUser)
+        => await HandleResponses.HandleResponse(() => _userBLL.GetListUsers(paginator, idUser), _logService, MethodBase.GetCurrentMethod().Name);
 
 
 

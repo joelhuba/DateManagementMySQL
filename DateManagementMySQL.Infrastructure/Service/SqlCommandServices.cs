@@ -1,12 +1,13 @@
 ﻿using DateManagementMySQL.Core.Interface.Service;
 using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 using System.Reflection;
 
 namespace Portafolio.Infrastructure.Services
 {
     public class SqlCommandServices : ISqlCommandService
     {
-        public void AddParameters<T>(MySqlCommand command, T parameters)
+        public void AddParameters<T>(SqlCommand command, T parameters)
         {
             if (parameters != null)
             {
@@ -14,7 +15,7 @@ namespace Portafolio.Infrastructure.Services
 
                 foreach (PropertyInfo property in properties)
                 {
-                    string parameterName = $"P_{property.Name}";
+                    string parameterName = $"@{property.Name}";
                     object? value = property.GetValue(parameters);
 
                     command.Parameters.AddWithValue(parameterName, value ?? DBNull.Value);

@@ -18,16 +18,6 @@ namespace DateManagementMySQL.Infrastructure.Repository
             return await _executeStoredProcedureService.ExecuteStoredProcedure("DelUser", obj);
         }
 
-        public async Task<ResponseDTO> GetUserById(int idUser)
-        {
-            object obj = new
-            {
-                IdUser = idUser
-            };
-            return await _executeStoredProcedureService.ExecuteSingleObjectStoredProcedure("GetUsersById", obj, MapToObjHelper.MapToObj<UserDTO>);
-            
-        }
-
         public async Task<ResponseDTO> CreateUser(UserDTO userDTO)
         {
             object obj = new
@@ -57,14 +47,15 @@ namespace DateManagementMySQL.Infrastructure.Repository
             return await _executeStoredProcedureService.ExecuteStoredProcedure("UpdateUser", obj);
         }
 
-        public async Task<ResponseDTO> GetAllUsers(PaginatorDTO paginator)
+        public async Task<ResponseDTO> GetListUsers(PaginatorDTO paginator, int? idUser)
         {
             object obj = new
             {
                 paginator.PageIndex,
-                paginator.PageSize
+                paginator.PageSize,
+                IdUser = idUser,
             };
-            return await _executeStoredProcedureService.ExecuteTableStoredProcedure<UserDTO>("GetAllUsers", obj, MapToListHelper.MapToList<UserDTO>);
+            return await _executeStoredProcedureService.ExecuteTableStoredProcedure<UserDTO>("GetListUsers", obj, MapToListHelper.MapToList<UserDTO>);
         }
     }
 }

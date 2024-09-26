@@ -1,10 +1,10 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System.Data.SqlClient;
 
 namespace DateManagementMySQL.Core.Interface.DataContext
 {
     public interface IDataContext
     {
-        MySqlConnection GetConnection();
-        MySqlCommand CreateCommand();
+        SqlConnection GetConnection();
+        SqlCommand CreateCommand();
     }
 }

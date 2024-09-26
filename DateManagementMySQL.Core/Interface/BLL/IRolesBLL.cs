@@ -8,7 +8,6 @@ namespace DateManagementMySQL.Core.Interfaces.BLL
         public Task<ResponseDTO> CreateRol(RolesDTO roles);
         public Task<ResponseDTO> UpdateRol(RolesDTO roles);
         public Task<ResponseDTO> DeleteRol(int Idrol);
-        public Task<ResponseDTO> GetAllRoles(PaginatorDTO paginator);
-        public Task<ResponseDTO> GetRolesById(int idRol);
+        public Task<ResponseDTO> GetListRoles(PaginatorDTO paginator, string? description);
     }
 }

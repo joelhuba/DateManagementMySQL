@@ -34,23 +34,16 @@ namespace DateManagementMySQL.Infrastructure.Repository
             return await _executeStoredProcedure.ExecuteStoredProcedure("DeletePatient", obj);
         }
 
-        public async Task<ResponseDTO> GetPatientByCedula(string cedula)
-        {
-            object obj = new
-            {
-                Cedula = cedula
-            };
-            return await _executeStoredProcedure.ExecuteSingleObjectStoredProcedure("GetPatientByCedula", obj,MapToObjHelper.MapToObj<PatientDTO>);
-        }
-
-        public async Task<ResponseDTO> GetPatients(PaginatorDTO paginatorDTO)
+     
+        public async Task<ResponseDTO> GetListPatients(PaginatorDTO paginatorDTO, string? cedula)
         {
             object obj = new
             {
                 paginatorDTO.PageSize,
-                paginatorDTO.PageIndex
-            };
-            return await _executeStoredProcedure.ExecuteTableStoredProcedure("GetPatients", obj, MapToListHelper.MapToList<PatientDTO>);
+                paginatorDTO.PageIndex,
+                Cedula = cedula
+            }; 
+            return await _executeStoredProcedure.ExecuteTableStoredProcedure("GetListPatients", obj, MapToListHelper.MapToList<PatientDTO>);
         }
 
         public async Task<ResponseDTO> UpdatePatient(PatientDTO patientDTO)

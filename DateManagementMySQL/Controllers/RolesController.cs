@@ -30,13 +30,9 @@ namespace DateManagementMySQL.Controllers
         public async Task<IActionResult> DeleteRol(int idRol)
          => await HandleResponses.HandleResponse(() => _rolesBll.DeleteRol(idRol), _logService, MethodBase.GetCurrentMethod().Name);
 
-        [HttpGet("/DateManagement/GetRoles")]
-        public async Task<IActionResult> GetRoles([FromQuery]PaginatorDTO paginatorDTO )
-        => await HandleResponses.HandleResponse(() => _rolesBll.GetAllRoles(paginatorDTO), _logService, MethodBase.GetCurrentMethod().Name);
-
-        [HttpGet("/DateManagement/GetRolById")]
-        public async Task<IActionResult> GetRolById([FromQuery] int idRol)
-         => await HandleResponses.HandleResponse(() => _rolesBll.GetRolesById(idRol), _logService, MethodBase.GetCurrentMethod().Name);
+        [HttpGet("/DateManagement/GetListRoles")]
+        public async Task<IActionResult> GetListRoles([FromQuery]PaginatorDTO paginatorDTO,string? description)
+        => await HandleResponses.HandleResponse(() => _rolesBll.GetListRoles(paginatorDTO, description), _logService, MethodBase.GetCurrentMethod().Name);
 
     }
 }

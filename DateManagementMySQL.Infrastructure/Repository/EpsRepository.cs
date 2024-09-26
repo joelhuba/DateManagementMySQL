@@ -20,16 +20,7 @@ namespace Portafolio.Infrastructure.Repository
           return await  _executeStoredProcedureService.ExecuteStoredProcedure("DelEps", obj);
         }
 
-        public async Task<ResponseDTO> GetEpsById(int idEps)
-        {
-            object obj = new
-            {
-                IdEps = idEps
-            };
-            return await _executeStoredProcedureService.ExecuteSingleObjectStoredProcedure("GetEpsById", obj, MapToObjHelper.MapToObj<EpsDTO>);
-
-        }
-
+      
         public async Task<ResponseDTO> CreateEps(EpsDTO epsDTO)
         {
             object obj = new
@@ -49,14 +40,15 @@ namespace Portafolio.Infrastructure.Repository
             return await _executeStoredProcedureService.ExecuteStoredProcedure("UpdateEps", obj);
         }
 
-        public async Task<ResponseDTO> GetAllEps(PaginatorDTO paginator)
+        public async Task<ResponseDTO> GetListEps(PaginatorDTO paginator, string? epsName)
         {
             object obj = new
             {
                 paginator.PageIndex,
-                paginator.PageSize
+                paginator.PageSize,
+                EpsName = epsName
             };
-            return await _executeStoredProcedureService.ExecuteTableStoredProcedure("GetAllEps", obj, MapToListHelper.MapToList<EpsDTO>);
+            return await _executeStoredProcedureService.ExecuteTableStoredProcedure("GetListEps", obj, MapToListHelper.MapToList<EpsDTO>);
         }
     }
 }

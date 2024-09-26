@@ -37,23 +37,13 @@ namespace DateManagementMySQL.Infrastructure.BLL
             }
         }
 
-        public async Task<ResponseDTO> GetPatientByCedula(string cedula)
-        {
-            try
-            {
-                return await _patient.GetPatientByCedula(cedula);
-            }
-            catch (Exception ex)
-            {
-                return ExceptionHelper.HandleException(_logService, MethodBase.GetCurrentMethod().Name, ex);
-            }
-        }
+      
 
-        public async Task<ResponseDTO> GetPatients(PaginatorDTO paginatorDTO)
+        public async Task<ResponseDTO> GetListPatients(PaginatorDTO paginatorDTO, string? cedula)
         {
             try
             {
-                return await _patient.GetPatients(paginatorDTO);
+                return await _patient.GetListPatients(paginatorDTO, cedula);
             }
             catch (Exception ex)
             {

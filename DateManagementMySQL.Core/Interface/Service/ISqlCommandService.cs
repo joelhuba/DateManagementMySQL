@@ -1,9 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System.Data.SqlClient;
 
 namespace DateManagementMySQL.Core.Interface.Service
 {
     public interface ISqlCommandService
     {
-        void AddParameters<T>(MySqlCommand command, T parameters);
+        void AddParameters<T>(SqlCommand command, T parameters);
     }
 }

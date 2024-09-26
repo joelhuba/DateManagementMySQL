@@ -8,7 +8,6 @@ namespace DateManagementMySQL.Core.Interfaces.BLL
         public Task<ResponseDTO> CreateEps(EpsDTO epsDTO);
         public Task<ResponseDTO> UpdateEps(EpsDTO epsDTO);
         public Task<ResponseDTO> DeleteEps(int IdEps);
-        public Task<ResponseDTO> GetEpsById(int IdEps);
-        public Task<ResponseDTO> GetAllEps(PaginatorDTO paginator);
+        public Task<ResponseDTO> GetListEps(PaginatorDTO paginator,string? epsName);
     }
 }

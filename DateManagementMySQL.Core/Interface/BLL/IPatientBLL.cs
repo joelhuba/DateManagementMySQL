@@ -8,7 +8,6 @@ namespace DateManagementMySQL.Core.Interface.BLL
         Task<ResponseDTO> CreatePatient(PatientDTO patientDTO);
         Task<ResponseDTO> UpdatePatient(PatientDTO patientDTO);
         Task<ResponseDTO> DeletePatient(int patientId);
-        Task<ResponseDTO> GetPatients(PaginatorDTO paginatorDTO);
-        Task<ResponseDTO> GetPatientByCedula(string cedula);
+        Task<ResponseDTO> GetListPatients(PaginatorDTO paginatorDTO, string? cedula);
     }
 }

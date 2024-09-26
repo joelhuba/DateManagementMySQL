@@ -15,6 +15,7 @@ namespace Portafolio.Infrastructure.Service
             services.AddTransient<IlogService, LogService>();
             services.AddTransient<IEmail, SendMail>();
             services.AddTransient<ISqlCommandService,SqlCommandServices>();
+            services.AddTransient<IAwsService, AwsService>();
             return services;
 
 

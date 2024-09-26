@@ -31,13 +31,8 @@ namespace DateManagementMySQL.Controllers
         public async Task<IActionResult> DeleteEps(int idEps)
         => await HandleResponses.HandleResponse(() => _epsBll.DeleteEps(idEps), _logService, MethodBase.GetCurrentMethod().Name);
 
-        [HttpGet("/DateManagement/GetEps")]
-        public async Task<IActionResult> GetEps([FromQuery]PaginatorDTO paginator)
-        => await HandleResponses.HandleResponse(() => _epsBll.GetAllEps(paginator), _logService, MethodBase.GetCurrentMethod().Name);
-
-        [HttpGet("/DateManagement/GetEpsById")]
-        public async Task<IActionResult> GetEpsById([FromQuery] int idEps)
-        => await HandleResponses.HandleResponse(() => _epsBll.GetEpsById(idEps), _logService, MethodBase.GetCurrentMethod().Name);
-
+        [HttpGet("/DateManagement/GetListEps")]
+        public async Task<IActionResult> GetListEps([FromQuery]PaginatorDTO paginator, string? epsName)
+        => await HandleResponses.HandleResponse(() => _epsBll.GetListEps(paginator, epsName), _logService, MethodBase.GetCurrentMethod().Name);
     }
 }

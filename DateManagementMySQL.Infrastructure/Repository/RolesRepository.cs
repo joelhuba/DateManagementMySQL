@@ -28,27 +28,19 @@ namespace Portafolio.Infrastructure.Repository
 
         }
 
-        public async Task<ResponseDTO> GetAllRoles(PaginatorDTO paginator)
+        public async Task<ResponseDTO> GetListRoles(PaginatorDTO paginator, string? description)
         {
             object obj = new
             {
                 paginator.PageIndex,
-                paginator.PageSize
+                paginator.PageSize,
+                Description = description
             };
-            return await _executeStoredProcedureService.ExecuteTableStoredProcedure<RolesDTO>("GetAllRoles", obj, MapToListHelper.MapToList<RolesDTO>);
+            return await _executeStoredProcedureService.ExecuteTableStoredProcedure<RolesDTO>("GetListRoles", obj, MapToListHelper.MapToList<RolesDTO>);
 
         }
 
-        public async Task<ResponseDTO> GetRolesById(int idRol)
-        {
-
-            object obj = new
-            {
-                IdRol = idRol
-            };
-            return await _executeStoredProcedureService.ExecuteSingleObjectStoredProcedure<RolesDTO>("GetRolesById", obj, MapToObjHelper.MapToObj<RolesDTO>);
-        }
-
+        
         public async Task<ResponseDTO> UpdateRol(RolesDTO roles)
         {
             object obj = new

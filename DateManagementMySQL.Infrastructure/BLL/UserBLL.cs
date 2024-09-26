@@ -42,11 +42,11 @@ namespace Portafolio.Infrastructure.BLL
             }
         }
 
-        public async Task<ResponseDTO> GetAllUsers(PaginatorDTO paginator)
+        public async Task<ResponseDTO> GetListUsers(PaginatorDTO paginator, int? idUser)
         {
             try
             {
-                return await _userRepository.GetAllUsers(paginator);
+                return await _userRepository.GetListUsers(paginator, idUser);
             }
             catch (Exception ex)
             {
@@ -54,17 +54,6 @@ namespace Portafolio.Infrastructure.BLL
             }
         }
 
-        public async Task<ResponseDTO> GetUserById(int idUser)
-        {
-            try
-            {
-                return await _userRepository.GetUserById(idUser);
-            }
-            catch (Exception ex)
-            {
-                return ExceptionHelper.HandleException(_logService, MethodBase.GetCurrentMethod().Name, ex);
-            }
-        }
 
         public async Task<ResponseDTO> UpdateUser(UserDTO userDTO)
         {

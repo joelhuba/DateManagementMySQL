@@ -36,11 +36,11 @@ namespace DateManagementMySQL.Infrastructure.BLL
             }
         }
 
-        public async Task<ResponseDTO> GetAllEps(PaginatorDTO paginator)
+        public async Task<ResponseDTO> GetListEps(PaginatorDTO paginator, string? epsName)
         {
             try
             {
-                return await _epsRepository.GetAllEps(paginator);
+                return await _epsRepository.GetListEps(paginator, epsName);
             }
             catch (Exception ex)
             {
@@ -48,17 +48,6 @@ namespace DateManagementMySQL.Infrastructure.BLL
             }
         }
 
-        public async Task<ResponseDTO> GetEpsById(int IdEps)
-        {
-            try
-            {
-                return await _epsRepository.GetEpsById(IdEps);
-            }
-            catch (Exception ex)
-            {
-                return ExceptionHelper.HandleException(_logService, MethodBase.GetCurrentMethod().Name, ex);
-            }
-        }
 
         public async Task<ResponseDTO> UpdateEps(EpsDTO epsDTO)
         {

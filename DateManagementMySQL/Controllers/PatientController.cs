@@ -31,17 +31,9 @@ namespace DateManagementMySQL.Controllers
         public async Task<IActionResult> DeletePatient(int patientId)
         => await HandleResponses.HandleResponse(() => _patientBLL.DeletePatient(patientId), _IlogService, MethodBase.GetCurrentMethod().Name);
 
-        [HttpGet("/DateManagement/GetPatients")]
-        public async Task<IActionResult> GetPatients([FromQuery]PaginatorDTO paginatorDTO)
-        => await HandleResponses.HandleResponse(() => _patientBLL.GetPatients(paginatorDTO), _IlogService, MethodBase.GetCurrentMethod().Name);
-
-
-        [HttpGet("/DateManagement/GetPatientByCedula")]
-        public async Task<IActionResult> GetPatientById([FromQuery] string cedula)
-        => await HandleResponses.HandleResponse(() => _patientBLL.GetPatientByCedula(cedula), _IlogService, MethodBase.GetCurrentMethod().Name);
-
-
-
+        [HttpGet("/DateManagement/GetListPatients")]
+        public async Task<IActionResult> GetListPatients([FromQuery]PaginatorDTO paginatorDTO, string? cedula)
+        => await HandleResponses.HandleResponse(() => _patientBLL.GetListPatients(paginatorDTO, cedula), _IlogService, MethodBase.GetCurrentMethod().Name);
 
     }
 }

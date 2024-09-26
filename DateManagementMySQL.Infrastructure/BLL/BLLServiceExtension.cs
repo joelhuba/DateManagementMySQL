@@ -1,6 +1,7 @@
 ﻿using DateManagementMySQL.Core.Interface.BLL;
 using DateManagementMySQL.Core.Interfaces.BLL;
 using DateManagementMySQL.Infrastructure.BLL;
+using DateManagementMySQL.Infrastructure.BLL.Service;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +17,9 @@ namespace Portafolio.Infrastructure.BLL
             services.AddTransient<IEpsBLL,EpsBLL>();
             services.AddTransient<IPatientBLL,PatientBLL>();
             services.AddTransient<IAuthBLL,AuthBLL>();
+            services.AddTransient<IPatientReviewBLL,PatientReviewBLL>();
+            services.AddTransient<IAwsServiceBLL,AwsServiceBLL>();
+            services.AddTransient<IAwsImageBLL, ImageAwsBLL>();
             return services;
         }
     }

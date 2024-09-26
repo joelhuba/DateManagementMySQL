@@ -3,21 +3,16 @@ using DateManagementMySQL.Core.Interface.DataContext;
 using DateManagementMySQL.Core.Interface.Service;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Data.SqlClient;
+
 
 namespace DateManagementMySQL.Infrastructure.Services
 {
-    public class ExecuteStoredProcedureService : IExecuteStoredProcedureService
+    public class ExecuteStoredProcedureService(IDataContext dataContext, IlogService logService, ISqlCommandService sqlCommandService) : IExecuteStoredProcedureService
     {
-        private readonly IDataContext _context;
-        private readonly IlogService _logService;
-        private readonly ISqlCommandService _sqlCommandService;
-
-        public ExecuteStoredProcedureService(IDataContext context, IlogService logService, ISqlCommandService sqlCommandService)
-        {
-            _context = context;
-            _logService = logService;
-            _sqlCommandService = sqlCommandService;
-        }
+        private readonly IDataContext _context = dataContext;
+        private readonly IlogService _logService = logService;
+        private readonly ISqlCommandService _sqlCommandService = sqlCommandService;
 
         private void HandleException(Exception ex, string storedProcedureName, ResponseDTO response)
         {
@@ -31,12 +26,12 @@ namespace DateManagementMySQL.Infrastructure.Services
             response.IsSuccess = false;
             try
             {
-                using MySqlCommand command = _context.CreateCommand();
+                using SqlCommand command = _context.CreateCommand();
                 command.CommandText = storedProcedureName;
                 command.CommandType = CommandType.StoredProcedure;
                 _sqlCommandService.AddParameters(command, parameters);
-                using var reader = await command.ExecuteReaderAsync();
-                reader.ReadAsync();
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                await reader.ReadAsync();
                 response.Message = reader.GetString(reader.GetOrdinal("Message"));
                 response.IsSuccess = reader.GetBoolean(reader.GetOrdinal("IsSuccess"));
             }
@@ -47,19 +42,20 @@ namespace DateManagementMySQL.Infrastructure.Services
             return response;
         }
 
-        public async Task<ResponseDTO> ExecuteDataStoredProcedure<TResult>(string storedProcedureName, object parameters, Func<MySqlDataReader, List<TResult>> mapFunction)
+        public async Task<ResponseDTO> ExecuteDataStoredProcedure<TResult>(string storedProcedureName, object parameters, Func<SqlDataReader, List<TResult>> mapFunction)
         {
             ResponseDTO response = new ResponseDTO();
             response.IsSuccess = false;
             try
             {
-                using MySqlCommand command = _context.CreateCommand();
+                using SqlCommand command = _context.CreateCommand();
                 command.CommandText = storedProcedureName;
                 command.CommandType = CommandType.StoredProcedure;
                 _sqlCommandService.AddParameters(command, parameters);
-                using var reader = await command.ExecuteReaderAsync();
-                List<TResult> resultList = mapFunction((MySqlDataReader)reader);
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                List<TResult> resultList = mapFunction(reader);
                 response.Data = resultList;
+                response.Message = "Operación Exitosa";
                 response.IsSuccess = true;
             }
             catch (Exception ex)
@@ -70,19 +66,20 @@ namespace DateManagementMySQL.Infrastructure.Services
             return response;
         }
 
-        public async Task<ResponseDTO> ExecuteSingleObjectStoredProcedure<TResult>(string storedProcedureName, object parameters, Func<MySqlDataReader, TResult> mapFunction)
+        public async Task<ResponseDTO> ExecuteSingleObjectStoredProcedure<TResult>(string storedProcedureName, object parameters, Func<SqlDataReader, TResult> mapFunction)
         {
             ResponseDTO response = new ResponseDTO();
             response.IsSuccess = false;
             try
             {
-                using MySqlCommand command = _context.CreateCommand();
+                using SqlCommand command = _context.CreateCommand();
                 command.CommandText = storedProcedureName;
                 command.CommandType = CommandType.StoredProcedure;
                 _sqlCommandService.AddParameters(command, parameters);
-                using var reader = await command.ExecuteReaderAsync();
-                TResult resultList = mapFunction((MySqlDataReader)reader);
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                TResult resultList = mapFunction(reader);
                 response.Data = resultList;
+                response.Message = "Operación Exitosa";
                 response.IsSuccess = true;
             }
             catch (Exception ex)
@@ -99,12 +96,12 @@ namespace DateManagementMySQL.Infrastructure.Services
             response.IsSuccess = false;
             try
             {
-                using MySqlCommand command = _context.CreateCommand();
+                using SqlCommand command = _context.CreateCommand();
                 command.CommandText = storedProcedureName;
                 command.CommandType = CommandType.StoredProcedure;
                 _sqlCommandService.AddParameters(command, parameters);
 
-                using var reader = await command.ExecuteReaderAsync();
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
 
                 bool hasErrorMessageColumn = reader.FieldCount > 0 && Enumerable.Range(0, reader.FieldCount).Any(i => reader.GetName(i) == "ErrorMessage");
 
@@ -151,7 +148,7 @@ namespace DateManagementMySQL.Infrastructure.Services
 
 
 
-        public async Task<ResponseDTO> ExecuteTableStoredProcedure<TResult>(string storedProcedureName, object? parameters, Func<MySqlDataReader, List<TResult>> mapFunction)
+        public async Task<ResponseDTO> ExecuteTableStoredProcedure<TResult>(string storedProcedureName, object? parameters, Func<SqlDataReader, List<TResult>> mapFunction)
         {
             var response = new ResponseDTO
             {
@@ -179,7 +176,7 @@ namespace DateManagementMySQL.Infrastructure.Services
                 {
                     reader.Close();
                     using var readerAgain = await command.ExecuteReaderAsync();
-                    var resultList = mapFunction((MySqlDataReader)readerAgain);
+                    var resultList = mapFunction(readerAgain);
                     int totalRecords = 0;
 
                     if (await readerAgain.NextResultAsync() && await readerAgain.ReadAsync())
@@ -188,6 +185,7 @@ namespace DateManagementMySQL.Infrastructure.Services
                     }
 
                     response.Data = new { Results = resultList, TotalRecords = totalRecords };
+                    response.Message = "Operación Exitosa";
                     response.IsSuccess = true;
                 }
             }

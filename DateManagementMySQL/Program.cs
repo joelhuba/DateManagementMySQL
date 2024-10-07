@@ -1,6 +1,9 @@
+using Amazon.Runtime;
+using Amazon.S3;
 using DateManagementMySQL.Core.DTOS.Common;
 using DateManagementMySQL.Infrastructure.Ioc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -9,6 +12,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using transversal_layer_back.Core.DTOs.Common;
+using Amazon;
 
 var builder = WebApplication.CreateBuilder(args);
 string CorsDateManagement = "CorsDateManagement";
@@ -25,6 +29,9 @@ builder.Services.AddDateManagementDependencies(configuration);
 var appSettingSection = configuration.GetSection("TokenSettings");
 builder.Services.Configure<AppSettings>(appSettingSection);
 var appSettings = appSettingSection.Get<AppSettings>();
+var awsCredentialsSection = configuration.GetSection("AWS");
+builder.Services.Configure<awsCredentials>(awsCredentialsSection);
+var awsCredentials = awsCredentialsSection.Get<awsCredentials>();
 var key = Encoding.ASCII.GetBytes(appSettings.SecretToken);
 builder.Services.AddAuthentication(d =>
 {
@@ -117,7 +124,15 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
-
+builder.Services.AddSingleton<IAmazonS3>(sp =>
+{
+    var credentials = new BasicAWSCredentials(awsCredentials.AccessKeyId, awsCredentials.SecretAccessKey);
+    var config = new AmazonS3Config
+    {
+        RegionEndpoint = RegionEndpoint.GetBySystemName(awsCredentials.Region) // Define la región
+    };
+    return new AmazonS3Client(credentials, config);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -126,7 +141,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(CorsDateManagement);
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

@@ -20,6 +20,7 @@ namespace Portafolio.Infrastructure.BLL
             services.AddTransient<IPatientReviewBLL,PatientReviewBLL>();
             services.AddTransient<IAwsServiceBLL,AwsServiceBLL>();
             services.AddTransient<IAwsImageBLL, ImageAwsBLL>();
+            services.AddTransient<ISectionBLL, SectionBLL>();
             return services;
         }
     }

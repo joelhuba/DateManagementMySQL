@@ -21,6 +21,7 @@ namespace Portafolio.Infrastructure.Repository
             services.AddTransient<IAuthUserRepository, AuthRepository>();
             services.AddTransient<IPatientReview,PatientReviewRepository>();
             services.AddTransient<IAwsImagesRepository, AwsImagesRepository>();
+            services.AddTransient<ISectionRepository, SectionRepository>();
             return services;
         }
     }

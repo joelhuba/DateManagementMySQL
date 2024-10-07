@@ -3,6 +3,7 @@ using DateManagementMySQL.Core.Interface.Service;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace DateManagementMySQL.Infrastructure.DataContext
 {
@@ -10,16 +11,15 @@ namespace DateManagementMySQL.Infrastructure.DataContext
     {
         private readonly IlogService _logService = logService;
         private readonly IConfiguration _configuration = configuration;
-        private MySqlConnection? connection;
-        //metodo para generar la conexion con la base de datos
-        public MySqlConnection GetConnection()
+        private SqlConnection? connection;
+        public SqlConnection GetConnection()
         {
             try
             {
                 if (connection == null || connection.State == ConnectionState.Closed)
                 {
                     string defaultConnection = _configuration.GetConnectionString("DefaultConnection") ?? "";
-                    connection = new MySqlConnection(defaultConnection);
+                    connection = new SqlConnection(defaultConnection);
                     connection.Open();
                 }
                 return connection;
@@ -30,12 +30,12 @@ namespace DateManagementMySQL.Infrastructure.DataContext
                 throw;
             }
         }
-        //metodo para definir que se hara con la base de datos ejemplo decidir si se ejecutara un storedprocedure o algo por el estilo
-        public MySqlCommand CreateCommand()
+
+        public SqlCommand CreateCommand()
         {
             try
             {
-                var command = new MySqlCommand();
+                var command = new SqlCommand();
                 command.Connection = GetConnection();
                 command.CommandType = CommandType.Text;
                 return command;
@@ -46,7 +46,6 @@ namespace DateManagementMySQL.Infrastructure.DataContext
                 throw;
             }
         }
-        //cierra la conexion
         public void Dispose()
         {
             if (connection != null && connection.State != ConnectionState.Closed)
@@ -55,7 +54,6 @@ namespace DateManagementMySQL.Infrastructure.DataContext
                 connection.Dispose();
             }
         }
-
 
     }
 }

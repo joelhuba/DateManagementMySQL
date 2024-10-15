@@ -17,12 +17,12 @@ namespace DateManagementMySQL.Controllers
         private readonly IlogService _logService = logService;
 
         [HttpPost("/DateManagement/CreateSection")]
-        public async Task<IActionResult> CreateSection(SectionDTO sectionDTO)
-        => await HandleResponses.HandleResponse(() => _sectionBLL.CreateSection(sectionDTO), _logService, MethodBase.GetCurrentMethod().Name);
+        public async Task<IActionResult> CreateSection([FromForm]SectionDTO sectionDTO, [FromForm] IFormFile? fileData)
+        => await HandleResponses.HandleResponse(() => _sectionBLL.CreateSection(sectionDTO, fileData), _logService, MethodBase.GetCurrentMethod().Name);
 
         [HttpPut("/DateManagement/UpdateSection")]
-        public async Task<IActionResult> UpdateSection(SectionDTO sectionDTO)
-        => await HandleResponses.HandleResponse(() => _sectionBLL.UpdateSection(sectionDTO), _logService, MethodBase.GetCurrentMethod().Name);
+        public async Task<IActionResult> UpdateSection([FromForm]SectionDTO sectionDTO,[FromForm] IFormFile? fileData)
+        => await HandleResponses.HandleResponse(() => _sectionBLL.UpdateSection(sectionDTO, fileData), _logService, MethodBase.GetCurrentMethod().Name);
 
         [HttpDelete("/DateManagement/DeleteSection")]
         public async Task<IActionResult> DeleteSection(int sectionId)

@@ -11,7 +11,7 @@ namespace DateManagementMySQL.Core.Interface.BLL
     public interface IAwsServiceBLL
     {
         public Task<ResponseDTO> UploadFileAsync(IFormFile fileData);
-        public Task<ResponseDTO> DeleteFileAsync(string fileName, int fileId);
+        public Task<ResponseDTO> DeleteFileAsync(string fileName);
         public Task<ResponseDTO> GetUrlFileAsync(string fileName);
     }
 }

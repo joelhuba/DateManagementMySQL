@@ -17,14 +17,14 @@ using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace DateManagementMySQL.Infrastructure.Service
 {
-    public class AwsService(IAmazonS3 amazonS3,IConfiguration configuration,IlogService logService,IAwsImageBLL awsImageBLL) : IAwsService
+    public class AwsService(IAmazonS3 amazonS3,IConfiguration configuration,IlogService logService) : IAwsService
     {
        private IAmazonS3 _amazonS3 = amazonS3;
        private IConfiguration _configuration = configuration;
        private IlogService _logService = logService;
-        private IAwsImageBLL _awsImageBLL = awsImageBLL;
 
-        public async Task<ResponseDTO> DeleteFileAsync(string fileName,int fileId)
+
+        public async Task<ResponseDTO> DeleteFileAsync(string fileName)
         {
             ResponseDTO response = new();
             response.IsSuccess = false;
@@ -37,9 +37,9 @@ namespace DateManagementMySQL.Infrastructure.Service
                     Key = fileName,
                 };
                 await _amazonS3.DeleteObjectAsync(DeleteRequest);
-                var responseRepository = await _awsImageBLL.DeleteImage(fileId);
-                response.IsSuccess= responseRepository.IsSuccess;
-                response.Message = responseRepository.Message;
+
+                response.IsSuccess= true;
+                response.Message = "Eliminado Exitosamente";
                 return response;
             }
             catch (Exception ex)
@@ -65,7 +65,7 @@ namespace DateManagementMySQL.Infrastructure.Service
                     Protocol= Protocol.HTTPS,
                 };
                 var presignedUrl = await _amazonS3.GetPreSignedURLAsync(UrlRequest);
-                
+              
                 response.IsSuccess= true;
                 response.Message = "url Generada";
                 response.Data = presignedUrl;
@@ -114,10 +114,10 @@ namespace DateManagementMySQL.Infrastructure.Service
                 image.ContentType = fileData.ContentType;
                 image.FileUrl = presignedUrl;
                 image.BucketName = _configuration["AWS:BucketName"];
-                var responsedata = await _awsImageBLL.UploadImage(image);
-                response.IsSuccess= responsedata.IsSuccess;
-                response.Message = responsedata.Message;
-                response.Data = presignedUrl;
+
+                response.IsSuccess=true;
+                response.Message = "imagen subida con exito";
+                response.Data = image;
                 return response;
 
             }

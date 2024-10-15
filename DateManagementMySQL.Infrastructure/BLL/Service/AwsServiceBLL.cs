@@ -18,11 +18,11 @@ namespace DateManagementMySQL.Infrastructure.BLL.Service
         private readonly IAwsService _awsService = awsService;
         private readonly IlogService _logService = logService;
 
-        public async Task<ResponseDTO> DeleteFileAsync(string fileName, int fileId)
+        public async Task<ResponseDTO> DeleteFileAsync(string fileName)
         {
             try
             {
-                return await _awsService.DeleteFileAsync(fileName, fileId);
+                return await _awsService.DeleteFileAsync(fileName);
             }
             catch (Exception ex)
             {

@@ -22,6 +22,7 @@ namespace DateManagementMySQL.Infrastructure.Repository
                 sectionDTO.SectionName,
                 sectionDTO.SectionContent,
                 sectionDTO.Image,
+                sectionDTO.ImageName,
                 sectionDTO.IsActive
 
             };
@@ -33,8 +34,6 @@ namespace DateManagementMySQL.Infrastructure.Repository
             object obj = new
             {
                 SectionId =sectionId 
-               
-
             };
             return await _executeStoredProcedureService.ExecuteStoredProcedure("DeleteSection", obj);
         }
@@ -58,6 +57,7 @@ namespace DateManagementMySQL.Infrastructure.Repository
                 sectionDTO.SectionName,
                 sectionDTO.SectionContent,
                 sectionDTO.Image,
+                sectionDTO.ImageName,
                 sectionDTO.IsActive
 
             };

@@ -13,5 +13,6 @@ namespace DateManagementMySQL.Core.DTOS
         public string SectionContent { get; set; }
         public bool IsActive { get; set; }
         public string? Image { get; set; }  
+        public string? ImageName {  get; set; }
     }
 }

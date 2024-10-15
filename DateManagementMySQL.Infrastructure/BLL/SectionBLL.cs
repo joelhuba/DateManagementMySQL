@@ -4,20 +4,32 @@ using DateManagementMySQL.Core.Interface.BLL;
 using DateManagementMySQL.Core.Interface.Repository;
 using DateManagementMySQL.Core.Interface.Service;
 using DateManagementMySQL.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Http;
 using System.Reflection;
-using static System.Collections.Specialized.BitVector32;
 
 namespace DateManagementMySQL.Infrastructure.BLL
 {
-    public class SectionBLL(IlogService logService,ISectionRepository sectionRepository) : ISectionBLL
+    public class SectionBLL(IlogService logService,ISectionRepository sectionRepository,IAwsService awsService) : ISectionBLL
     {
         private ISectionRepository _sectionRepository = sectionRepository;
         private IlogService _logService = logService;
-        public async Task<ResponseDTO> CreateSection(SectionDTO sectionDTO)
+        private IAwsService _awsService = awsService;
+        public async Task<ResponseDTO> CreateSection(SectionDTO sectionDTO, IFormFile fileData)
         {
             try
             {
-                return await _sectionRepository.CreateSection(sectionDTO);
+                if(fileData != null)
+                {
+                    var upload = await _awsService.UploadFileAsync(fileData); 
+                    var uploadedImage = upload.Data as AwsImagesDTO;
+                    sectionDTO.Image = uploadedImage.FileUrl;
+                    sectionDTO.ImageName = uploadedImage.FileName;
+                    return await _sectionRepository.CreateSection(sectionDTO);
+                }
+                else
+                {
+                    return await _sectionRepository.CreateSection(sectionDTO);
+                }        
             }
             catch (Exception ex)
             {
@@ -49,11 +61,23 @@ namespace DateManagementMySQL.Infrastructure.BLL
             }
         }
 
-        public async Task<ResponseDTO> UpdateSection(SectionDTO sectionDTO)
+        public async Task<ResponseDTO> UpdateSection(SectionDTO sectionDTO, IFormFile fileData)
         {
             try
             {
-                return await _sectionRepository.UpdateSection(sectionDTO);
+                if (fileData != null) {
+                    await _awsService.DeleteFileAsync(sectionDTO.ImageName);
+                    var upload = await _awsService.UploadFileAsync(fileData);
+                    var uploadedImage = upload.Data as AwsImagesDTO;
+                    sectionDTO.Image = uploadedImage.FileUrl;
+                    sectionDTO.ImageName = uploadedImage.FileName;
+                    return await _sectionRepository.UpdateSection(sectionDTO);
+                }
+                else
+                {
+                    return await _sectionRepository.UpdateSection(sectionDTO);
+                }
+               
             }
             catch (Exception ex)
             {
